@@ -53,4 +53,5 @@ class DjSpider(Spider):
         next_page = response.xpath("//a[@class='nxt']/@href")
         if next_page.extract_first() is not None:
             url_next_page = get_page_url(next_page.extract_first(), self.base_url)
+            print(url_next_page)
             yield scrapy.Request(url_next_page, self.parsecontent)

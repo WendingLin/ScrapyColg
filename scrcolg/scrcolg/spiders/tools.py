@@ -20,9 +20,9 @@ def clean_string(dirty_string):
     if "发表于" in dirty_string:
         pos1 = dirty_string.find("发表于")
         pos2 = pos1+18
-        while(dirty_string[pos2, pos2+1].isdigit()):
+        while(dirty_string[pos2:pos2+1].isdigit()):
             pos2+=1
-        dirty_string = dirty_string[pos2:]
+            dirty_string = dirty_string[pos2:]
     if "登录/注册后可看大图" in dirty_string or "guestviewthumb" in dirty_string:
         dirty_string = ""
     return dirty_string.replace('\r', '').replace('\n','')
