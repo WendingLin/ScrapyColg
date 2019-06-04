@@ -5,9 +5,12 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from .items import Topic, Reply
+import jieba
 
 
 class ScrcolgPipeline(object):
+    counthours = [0] * 24
+
     def open_spider(self, spider):
         self.file = open('items.jl', 'w')
 
