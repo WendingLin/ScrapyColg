@@ -1,7 +1,7 @@
 import scrapy
 from scrapy.spiders import Spider
-
-from ..items import topic, reply
+from .tools import time_compare
+from ..items import Topic, Reply
 
 
 class DjSpider(Spider):
@@ -10,17 +10,21 @@ class DjSpider(Spider):
         'https://bbs.colg.cn/forum-171-1.html',
     ]
 
+
     starter_url = 'https://bbs.colg.cn/'
-    page_counter = 0
+    page_counter = 1
 
     # first page
     def parse(self, response):
         for each in response.xpath("//table[@id='threadlisttableid']/tbody[contains(@id,'normal')]"):
-            type = each.xpath("tr/th/em/a/text()").extract_first()
-            content = each.xpath("tr/th/a[1]/text()").extract_first()
-            author = each.xpath("tr/td[2]/cite/a/text()").extract_first()
-            date = each.xpath("tr/td[2]/em/span/text()").extract_first()
-            print("happy")
+            topic = Topic()
+            topic['date'] = each.xpath("tr/td[2]/em/span/text()").extract_first()
+            if(time_compare(topic['date'])==False):
+                continue
+            topic['type'] = each.xpath("tr/th/em/a/text()").extract_first()
+            topic['content'] = each.xpath("tr/th/a[1]/text()").extract_first()
+            topic['author'] = each.xpath("tr/td[2]/cite/a/text()").extract_first()
+            yield topic
 
         # parse the page and yield items
         if self.page_counter == 1:
