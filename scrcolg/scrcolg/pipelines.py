@@ -5,24 +5,50 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from .items import Topic, Reply
-import jieba
+
+from .spiders.tools import get_hour, map_add, sortmap, write_map_to_csv
 
 
 class ScrcolgPipeline(object):
-    counthours = [0] * 24
+    hours = {}
+    topictypes = {}
+    replyauthors = {}
+    topicauthors = {}
+    counttopics = 0
+    countreplies = 0
+
 
     def open_spider(self, spider):
-        self.file = open('items.jl', 'w')
+        self.file1 = open('counttopic', 'w')
+        self.file2 = open('countreply', 'w')
+        return
 
     def close_spider(self, spider):
-        self.file.close()
+        print("总共统计帖子数："+str(self.counttopics))
+        print("总共统计回复数：" + str(self.countreplies))
+        write_map_to_csv(self.hours, 'hours.csv')
+        write_map_to_csv(self.topictypes, 'topictypes.csv')
+        write_map_to_csv(self.replyauthors, 'replyauthors.csv')
+        write_map_to_csv(self.topicauthors, 'topicauthors.csv')
+        self.file1.close()
+        self.file2.close()
+        return
 
     def process_item(self, item, spider):
+        map_add(get_hour(item['date']), self.hours)
+        author = item['author']
+        line =item['content'] + "\n"
         if isinstance(item, Topic):
-            line = "帖子："+item['content'] + "\n"
+            self.counttopics+=1
+            type = item['type']
+            map_add(type, self.topictypes)
+            map_add(author, self.topicauthors)
+            self.file1.write(line)
         if isinstance(item, Reply):
-            line = "回复:"+ item['content']+'\n'
-        self.file.write(line)
+            self.countreplies+=1
+            map_add(author, self.replyauthors)
+            self.file2.write(line)
+
         return item
 
 

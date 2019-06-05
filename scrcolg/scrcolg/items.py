@@ -17,6 +17,6 @@ class Topic(scrapy.Item):
 class Reply(scrapy.Item):
     # define the fields for your item here like:
     content = scrapy.Field()
-    #author = scrapy.Field()
-    #date = scrapy.Field()
+    author = scrapy.Field()
+    date = scrapy.Field()
 

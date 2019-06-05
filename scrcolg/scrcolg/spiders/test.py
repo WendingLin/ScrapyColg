@@ -39,15 +39,17 @@ class DjSpider(Spider):
 
     def parsecontent(self, response):
         # parse the page and yield items
+        #for path in response.xpath("//td[@class='t_f']"):
 
-        # for each in response.xpath("//table[@class='plhin']/tr[1]"):
-        #     content = each.xpath("//td[@class='t_f']")[0].xpath("string(.)").extract_first()
-        #     #for info in each.xpath("//td[@class='t_f']/*[not(@class='pstatus') and not(@class='quote')]"):
-        #         #content += info.xpath("string(.)").extract_first()
-        for path in response.xpath("//td[@class='t_f']"):
-            content = path.xpath("string(.)").extract_first()
+        contentpath = response.xpath("//td[@class='t_f']")
+        authorpath = response.xpath("//a[@class='xw1']/text()")
+        datepath = response.xpath("//div[@class='pti']/div[@class='authi']/em/text()")
+        for i in range(len(contentpath)):
             reply = Reply()
+            content = contentpath[i].xpath("string(.)").extract_first()
             reply['content'] = clean_string(content)
+            reply['author'] = authorpath[i].extract()
+            reply['date'] = datepath[i].extract()[4:]
             yield reply
 
         next_page = response.xpath("//a[@class='nxt']/@href")
