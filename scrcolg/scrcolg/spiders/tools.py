@@ -24,8 +24,11 @@ def clean_string(dirty_string):
         while(dirty_string[pos2:pos2+1].isdigit()):
             pos2+=1
         dirty_string = dirty_string[pos2:]
+        pos3 = dirty_string.find('\n', dirty_string.find('\n') + 1)
+        dirty_string = dirty_string[pos3+1:]
     if "登录/注册后可看大图" in dirty_string or "guestviewthumb" in dirty_string:
         dirty_string = ""
+
     return dirty_string.replace('\r', '').replace('\n','')
 
 
@@ -40,7 +43,7 @@ def map_add(info, map):
         map[info] += 1
 
 def sortmap(map):
-    return sorted(map.items(),key=lambda x:x[1],reverse=True)
+    return dict(sorted(map.items(),key=lambda x:x[1],reverse=True))
 
 
 def write_map_to_csv(map, filename):
