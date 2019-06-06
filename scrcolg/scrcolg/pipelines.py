@@ -19,17 +19,17 @@ class ScrcolgPipeline(object):
 
 
     def open_spider(self, spider):
-        self.file1 = open('counttopic', 'w')
-        self.file2 = open('countreply', 'w')
+        self.file1 = open('./tempdata/counttopic', 'w')
+        self.file2 = open('./tempdata/countreply', 'w')
         return
 
     def close_spider(self, spider):
         print("总共统计帖子数："+str(self.counttopics))
         print("总共统计回复数：" + str(self.countreplies))
         write_map_to_csv(sortmap(self.hours), 'hours.csv')
-        write_map_to_csv(sortmap(self.topictypes), 'topictypes.csv')
-        write_map_to_csv(sortmap(self.replyauthors), 'replyauthors.csv')
-        write_map_to_csv(sortmap(self.topicauthors), 'topicauthors.csv')
+        write_map_to_csv(sortmap(self.topictypes), './tempdata/topictypes.csv')
+        write_map_to_csv(sortmap(self.replyauthors), './tempdata/replyauthors.csv')
+        write_map_to_csv(sortmap(self.topicauthors), './tempdata/topicauthors.csv')
         self.file1.close()
         self.file2.close()
         return
