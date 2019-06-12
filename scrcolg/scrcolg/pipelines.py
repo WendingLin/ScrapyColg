@@ -6,11 +6,12 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from .items import Topic, Reply
 
-from .spiders.tools import get_hour, map_add, sortmap, write_map_to_csv
+from .spiders.tools import get_hour, map_add, sortmap, write_map_to_csv, get_date
 
 
 class ScrcolgPipeline(object):
     hours = {}
+    dates = {}
     topictypes = {}
     replyauthors = {}
     topicauthors = {}
@@ -26,7 +27,8 @@ class ScrcolgPipeline(object):
     def close_spider(self, spider):
         print("总共统计帖子数："+str(self.counttopics))
         print("总共统计回复数：" + str(self.countreplies))
-        write_map_to_csv(sortmap(self.hours), 'hours.csv')
+        write_map_to_csv(self.dates, './tempdata/date.csv')
+        write_map_to_csv(self.hours, './tempdata/hours.csv')
         write_map_to_csv(sortmap(self.topictypes), './tempdata/topictypes.csv')
         write_map_to_csv(sortmap(self.replyauthors), './tempdata/replyauthors.csv')
         write_map_to_csv(sortmap(self.topicauthors), './tempdata/topicauthors.csv')
@@ -36,6 +38,7 @@ class ScrcolgPipeline(object):
 
     def process_item(self, item, spider):
         map_add(get_hour(item['date']), self.hours)
+        map_add(get_date(item['date']), self.dates)
         author = item['author']
         line =item['content'] + "\n"
         if isinstance(item, Topic):

@@ -5,7 +5,7 @@ def time_compare(timestr):
     timethread = datetime.strptime(timestr, '%Y-%m-%d %H:%M')
     timenow = datetime.now()
     diff = timenow-timethread
-    if(diff>timedelta(days=7)):
+    if(diff>timedelta(days=1)):
         return False
     return True
 
@@ -35,6 +35,10 @@ def clean_string(dirty_string):
 def get_hour(timestr):
     time = datetime.strptime(timestr, '%Y-%m-%d %H:%M')
     return time.hour
+
+def get_date(timestr):
+    time = datetime.strptime(timestr, '%Y-%m-%d %H:%M')
+    return str(time.month)+'-'+str(time.day)
 
 def map_add(info, map):
     if not info in map:
