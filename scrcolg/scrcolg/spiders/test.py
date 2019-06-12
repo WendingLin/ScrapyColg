@@ -28,7 +28,7 @@ class DjSpider(Spider):
             yield topic
 
         # parse the page and yield items
-        if self.page_counter == 1:
+        if self.page_counter == 100:
             return
         self.page_counter += 1
         next_page = response.xpath("//a[@class='nxt']/@href").extract_first()
